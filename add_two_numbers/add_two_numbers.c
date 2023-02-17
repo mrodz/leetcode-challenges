@@ -7,17 +7,17 @@
 #endif
 
 struct ListNode {
-    int val;
-    struct ListNode *next;
+	int val;
+	struct ListNode *next;
 };
 
-struct ListNode* from_array(int *array, int length) {
-	struct ListNode *result = (struct ListNode*) malloc(sizeof(struct ListNode));
+struct ListNode *from_array(int *array, int length) {
+	struct ListNode *result = (struct ListNode *)malloc(sizeof(struct ListNode));
 	struct ListNode *p = result;
 
 	for (int i = 0; i < length - 1; i++) {
 		p->val = array[i];
-		struct ListNode *next = (struct ListNode*) malloc(sizeof(struct ListNode));
+		struct ListNode *next = (struct ListNode *)malloc(sizeof(struct ListNode));
 		p->next = next;
 		p = next;
 	}
@@ -27,6 +27,9 @@ struct ListNode* from_array(int *array, int length) {
 	return result;
 }
 
+#define TOP 0b100
+#define BOTTOM 0b010
+
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -34,11 +37,8 @@ struct ListNode* from_array(int *array, int length) {
  *     struct ListNode *next;
  * };
  */
-struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
-	#define TOP 0b100
-	#define BOTTOM 0b010
-
-    struct ListNode *result = (struct ListNode*) malloc(sizeof(struct ListNode));
+struct ListNode *addTwoNumbers(struct ListNode *l1, struct ListNode *l2) {
+	struct ListNode *result = (struct ListNode *)malloc(sizeof(struct ListNode));
 	struct ListNode *p = result;
 
 	struct ListNode *bottom = l1, *top = l2;
@@ -50,17 +50,14 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 	while (1) {
 		if (top == NULL) flags |= TOP;
 		if (bottom == NULL) flags |= BOTTOM;
-		
+
 		int sum = add;
 
 		if (flags ^ TOP) sum += top->val;
-		if (flags ^ BOTTOM) sum += bottom->val;	
-		
-		if (sum > 9) {
-			add = 1;
-		} else {
-			add = 0;
-		}
+		if (flags ^ BOTTOM) sum += bottom->val;
+
+		if (sum > 9) add = 1;
+		else add = 0;
 
 		sum %= 10;
 		p->val = sum;
@@ -92,11 +89,11 @@ void cleanup(struct ListNode *node) {
 
 void print(struct ListNode *list) {
 #ifdef DEBUG
-	printf("%d ", list->val);	
+	printf("%d ", list->val);
 #endif
 }
 
-void traverse(struct ListNode *list, void(*callback)(struct ListNode *node)) {
+void traverse(struct ListNode *list, void (*callback)(struct ListNode *node)) {
 	struct ListNode *p = list, *next;
 	do {
 		next = p->next;
@@ -105,8 +102,8 @@ void traverse(struct ListNode *list, void(*callback)(struct ListNode *node)) {
 }
 
 void main(void) {
-	int top[] = {2,4,3};
-	int bottom[] = {5,6,4};
+	int top[] = {2, 4, 3};
+	int bottom[] = {5, 6, 4};
 
 	struct ListNode *l1 = from_array(top, sizeof(top) / sizeof(int));
 	struct ListNode *l2 = from_array(bottom, sizeof(bottom) / sizeof(int));
@@ -114,5 +111,8 @@ void main(void) {
 	struct ListNode *l3 = addTwoNumbers(l1, l2);
 
 	traverse(l3, &print);
+
+	traverse(l1, &cleanup);
+	traverse(l2, &cleanup);
 	traverse(l3, &cleanup);
 }
